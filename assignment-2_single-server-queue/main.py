@@ -6,6 +6,7 @@ Q_LIMIT = 100
 BUSY = 1
 IDLE = 0
 
+
 class SimulationState:
     def __init__(self):
         self.next_event_type = 0
@@ -28,10 +29,14 @@ class SimulationState:
         self.outfile = None
 
 # Function to generate exponential random variates
+
+
 def expon(mean):
     return -mean * math.log(random.random())
 
 # Initialize simulation state
+
+
 def initialize(state):
     state.sim_time = 0.0
     state.server_status = IDLE
@@ -44,11 +49,13 @@ def initialize(state):
 
     # Schedule the first arrival using exponential distribution
     state.time_next_event[1] = state.sim_time + expon(state.mean_interarrival)
-    
+
     # Departure time is initially set to infinity (no customer in service)
     state.time_next_event[2] = float('inf')
 
 # Determine the next event type and advance simulation time
+
+
 def timing(state):
     min_time_next_event = float('inf')
     state.next_event_type = 0
@@ -65,6 +72,8 @@ def timing(state):
     state.sim_time = min_time_next_event
 
 # Handle customer arrival
+
+
 def arrive(state):
     # Schedule the next arrival using exponential distribution
     state.time_next_event[1] = state.sim_time + expon(state.mean_interarrival)
@@ -86,6 +95,8 @@ def arrive(state):
         state.time_next_event[2] = state.sim_time + expon(state.mean_service)
 
 # Handle customer departure
+
+
 def depart(state):
     if state.num_in_q == 0:
         state.server_status = IDLE
@@ -103,6 +114,8 @@ def depart(state):
             state.time_arrival[i] = state.time_arrival[i + 1]
 
 # Update statistical accumulators
+
+
 def update_time_avg_stats(state):
     time_since_last_event = state.sim_time - state.time_last_event
     state.time_last_event = state.sim_time
@@ -111,18 +124,29 @@ def update_time_avg_stats(state):
     state.area_server_status += state.server_status * time_since_last_event
 
 # Generate final report
+
+
 def report(state):
     state.outfile.write("\nSingle-server queueing system\n\n")
-    state.outfile.write(f"Mean interarrival time {state.mean_interarrival:11.3f} minutes\n")
-    state.outfile.write(f"Mean service time     {state.mean_service:11.3f} minutes\n")
-    state.outfile.write(f"Number of customers   {state.num_delays_required:11d}\n\n")
+    state.outfile.write(
+        f"Mean interarrival time {state.mean_interarrival:11.3f} minutes\n")
+    state.outfile.write(
+        f"Mean service time     {state.mean_service:11.3f} minutes\n")
+    state.outfile.write(
+        f"Number of customers   {state.num_delays_required:11d}\n\n")
 
-    state.outfile.write(f"Average delay in queue     {state.total_of_delays / state.num_custs_delayed:11.3f} minutes\n")
-    state.outfile.write(f"Average number in queue    {state.area_num_in_q / state.sim_time:11.3f}\n")
-    state.outfile.write(f"Server utilization         {state.area_server_status / state.sim_time:11.3f}\n")
-    state.outfile.write(f"Time simulation ended      {state.sim_time:11.3f} minutes\n")
+    state.outfile.write(
+        f"Average delay in queue     {state.total_of_delays / state.num_custs_delayed:11.3f} minutes\n")
+    state.outfile.write(
+        f"Average number in queue    {state.area_num_in_q / state.sim_time:11.3f}\n")
+    state.outfile.write(
+        f"Server utilization         {state.area_server_status / state.sim_time:11.3f}\n")
+    state.outfile.write(
+        f"Time simulation ended      {state.sim_time:11.3f} minutes\n")
 
 # Main driver
+
+
 def main():
     state = SimulationState()
 
@@ -138,7 +162,8 @@ def main():
         values = list(map(float, input_line.split()))
 
         if len(values) < 3:
-            raise ValueError(f"Not enough values in input file. Expected 3 values, got {len(values)}.")
+            raise ValueError(
+                f"Not enough values in input file. Expected 3 values, got {len(values)}.")
 
         state.mean_interarrival, state.mean_service, num_delays = values
         state.num_delays_required = int(num_delays)
@@ -165,6 +190,7 @@ def main():
             state.infile.close()
         if state.outfile:
             state.outfile.close()
+
 
 if __name__ == "__main__":
     main()
