@@ -7,7 +7,7 @@ DICE_UNICODE = ['\u2680', '\u2681', '\u2682', '\u2683', '\u2684', '\u2685']
 
 
 def roll_dice():
-    """Simulates rolling a six-sided die using random.random()."""
+    """Simulate rolling a six-sided die using random.random()."""
     value = random.random()
     if 0 <= value < 1/6:
         return 1
@@ -86,14 +86,19 @@ class DiceSimulatorGUI:
             self.tree.insert('', 'end', values=(
                 face, count, f"{percentage:.1f}%"))
 
+        # Insert total row
+        total_frequency = sum(face_counts.values())
+        total_percentage = (total_frequency / rolls) * 100
+        self.tree.insert('', 'end', values=(
+            'Total', total_frequency, f"{total_percentage:.1f}%"))
+
         # Print results to terminal
         print("Face  Frequency   Percentage")
         for face, count in face_counts.items():
             percentage = (count / rolls) * 100
             print(f"{face:4}   {count:9}   {percentage:.1f}%")
-        total_frequency = sum(face_counts.values())
-        total_percentage = (total_frequency / rolls) * 100
-        print(f"Total  {total_frequency:9}   {total_percentage:.1f}%\n")
+            print("___________________________________ \n")
+            print(f"Total  {total_frequency:9}   {total_percentage:.1f}%\n")
 
 
 if __name__ == "__main__":
